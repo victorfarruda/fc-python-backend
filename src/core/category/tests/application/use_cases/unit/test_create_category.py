@@ -4,15 +4,14 @@ from uuid import UUID
 import pytest
 
 from src.core.category.application.category_repository import CategoryRepository
-from src.core.category.application.create_category import CreateCategory, CreateCategoryRequest, CreateCategoryResponse
-from src.core.category.application.exceptions import InvalidCategoryData
-from src.core.category.infra.in_memory_category import InMemoryCategoryRepository
+from src.core.category.application.use_cases.create_category import CreateCategory, CreateCategoryRequest, CreateCategoryResponse
+from src.core.category.application.use_cases.exceptions import InvalidCategoryData
 
 
 class TestCreateCategory:
     def test_create_category_with_valid_data(self):
-        repository = InMemoryCategoryRepository()
-        use_case = CreateCategory(repository=repository)
+        repository_mock = MagicMock(CategoryRepository)
+        use_case = CreateCategory(repository=repository_mock)
         request = CreateCategoryRequest(
             name='Filme',
             description='Categoria para filmes',
@@ -24,16 +23,11 @@ class TestCreateCategory:
         assert isinstance(response, CreateCategoryResponse)
         assert response.id is not None
         assert isinstance(response.id, UUID)
-        assert len(repository.categories) == 1
-
-        assert repository.categories[0].id == response.id
-        assert repository.categories[0].name == 'Filme'
-        assert repository.categories[0].description == 'Categoria para filmes'
-        assert repository.categories[0].is_active is True
+        assert repository_mock.save.called is True
 
     def test_create_category_with_invalid_data(self):
-        repository = InMemoryCategoryRepository()
-        use_case = CreateCategory(repository=repository)
+        repository_mock = MagicMock(CategoryRepository)
+        use_case = CreateCategory(repository=repository_mock)
         request = CreateCategoryRequest(
             name='',
         )
