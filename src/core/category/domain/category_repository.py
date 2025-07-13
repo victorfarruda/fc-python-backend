@@ -24,4 +24,4 @@ class CategoryRepository(ABC):
 
     @abstractmethod
     def list(self):
-        pass
+        raise NotImplementedError
