@@ -142,3 +142,90 @@ class TestCreateAPI:
             name='Movie',
             description='Movie description',
         )
+
+
+@pytest.mark.django_db
+class TestUpdateAPI:
+    def test_when_payload_is_invalid_then_returns_400(self) -> None:
+        url = '/api/categories/123213213123/'  # UUID invalido
+        response = APIClient().put(
+            url,
+            data={
+                'name': '',  # Name não pode ser vazio
+                'description': 'Movie description',
+            },
+            format='json',
+        )
+
+        assert status.HTTP_400_BAD_REQUEST == response.status_code
+        assert {
+            'id': ['Must be a valid UUID.'],
+            'name': ['This field may not be blank.'],
+            'is_active': ['This field is required.'],
+        } == response.data
+
+    def test_when_payload_is_valid_then_update_category_and_returns_204(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+    ) -> None:
+        category_repository.save(category_movie)
+
+        url = f'/api/categories/{category_movie.id}/'
+        response = APIClient().put(
+            url,
+            data={
+                'name': 'Documentary',
+                'description': 'Documentary description',
+                'is_active': True,
+            }
+        )
+
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        updated_category = category_repository.get_by_id(category_movie.id)
+
+        assert updated_category.id == category_movie.id
+        assert updated_category.name == 'Documentary'
+        assert updated_category.description == 'Documentary description'
+        assert updated_category.is_active is True
+
+    def test_when_category_does_not_exist_then_returns_404(self) -> None:
+        url = f'/api/categories/{uuid.uuid4()}/'
+        response = APIClient().put(
+            url,
+            data={
+                'name': 'Documentary',
+                'description': 'Documentary description',
+                'is_active': True,
+            }
+        )
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+
+
+@pytest.mark.django_db
+class TestDeleteAPI:
+    def test_when_payload_is_invalid_then_returns_400(self) -> None:
+        url = '/api/categories/123213213123/'  # UUID invalido
+        response = APIClient().delete(url)
+
+        assert status.HTTP_400_BAD_REQUEST == response.status_code
+
+    def test_when_category_does_not_exist_then_returns_404(self) -> None:
+        url = f'/api/categories/{uuid.uuid4()}/'
+        response = APIClient().delete(url)
+
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+
+    def test_when_payload_is_valid_then_delete_category_and_returns_204(
+        self,
+        category_movie: Category,
+        category_repository: DjangoORMCategoryRepository,
+    ) -> None:
+        category_repository.save(category_movie)
+
+        url = f'/api/categories/{category_movie.id}/'
+        response = APIClient().delete(url)
+
+        assert status.HTTP_204_NO_CONTENT == response.status_code
+        assert category_repository.list() == []
+        assert category_repository.get_by_id(category_movie.id) is None
