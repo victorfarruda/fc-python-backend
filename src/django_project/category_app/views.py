@@ -12,7 +12,8 @@ from core.category.application.use_cases.delete_category import DeleteCategoryRe
 from core.category.application.use_cases.update_category import UpdateCategory, UpdateCategoryRequest
 from django_project.category_app.serializers import ListCategoryResponseSerializer, RetrieveCategoryRequestSerializer, \
     CategoryResponseSerializer, RetrieveCategoryResponseSerializer, CreateCategoryRequestSerializer, \
-    CreateCategoryResponseSerializer, UpdateCategoryRequestSerializer, DeleteCategoryRequestSerializer
+    CreateCategoryResponseSerializer, UpdateCategoryRequestSerializer, DeleteCategoryRequestSerializer, \
+    PartialUpdateCategoryRequestSerializer
 from src.core.category.application.use_cases.exceptions import CategoryNotFound, InvalidCategoryData
 from src.core.category.application.use_cases.get_category import GetCategory, GetCategoryRequest, GetCategoryResponse
 from django_project.category_app.repository import DjangoORMCategoryRepository
@@ -88,6 +89,24 @@ class CategoryViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
         input = DeleteCategoryRequest(**serializer.validated_data)
         use_case = DeleteCategory(repository=DjangoORMCategoryRepository())
+
+        try:
+            use_case.execute(request=input)
+        except CategoryNotFound:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+        return Response(status=HTTP_204_NO_CONTENT)
+
+    def partial_update(self, request: Request, pk: UUID=None) -> Response:
+        serializer = PartialUpdateCategoryRequestSerializer(
+            data={
+                **request.data,
+                "id": pk,
+            }
+        )
+        serializer.is_valid(raise_exception=True)
+        input = UpdateCategoryRequest(**serializer.validated_data)
+        use_case = UpdateCategory(repository=DjangoORMCategoryRepository())
 
         try:
             use_case.execute(request=input)
