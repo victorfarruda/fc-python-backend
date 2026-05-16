@@ -17,7 +17,7 @@ class RetrieveCategoryRequestSerializer(serializers.Serializer):
 
 
 class RetrieveCategoryResponseSerializer(serializers.Serializer):
-    data = CategoryResponseSerializer(source='*')
+    data = CategoryResponseSerializer(source="*")
 
 
 class CreateCategoryRequestSerializer(serializers.Serializer):

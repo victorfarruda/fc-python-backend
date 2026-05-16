@@ -8,8 +8,8 @@ class TestSave:
     def test_can_save_entity_category(self):
         repository = InMemoryCategoryRepository()
         category = Category(
-            name='Filme',
-            description='Categoria para Filmes',
+            name="Filme",
+            description="Categoria para Filmes",
         )
         repository.save(category)
 
@@ -20,14 +20,16 @@ class TestSave:
 class TestGetById:
     def test_can_get_by_id(self):
         category_filme = Category(
-            name='Filme',
-            description='Categoria para Filmes',
+            name="Filme",
+            description="Categoria para Filmes",
         )
         category_serie = Category(
-            name='Série',
-            description='Categoria para Séries',
+            name="Série",
+            description="Categoria para Séries",
         )
-        repository = InMemoryCategoryRepository(categories=[category_filme, category_serie])
+        repository = InMemoryCategoryRepository(
+            categories=[category_filme, category_serie]
+        )
 
         category_received = repository.get_by_id(category_filme.id)
 

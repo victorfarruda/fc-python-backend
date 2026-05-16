@@ -9,8 +9,8 @@ from core.category.domain.category import Category
 class TestSave:
     def test_save_category_in_database(self):
         category = Category(
-            name='Movie',
-            description='Movie Description',
+            name="Movie",
+            description="Movie Description",
         )
         repository = DjangoORMCategoryRepository()
 

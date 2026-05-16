@@ -1,8 +1,12 @@
 from unittest.mock import create_autospec
 
 from core.category.domain.category_repository import CategoryRepository
-from src.core.category.application.use_cases.list_category import ListCategory, ListCategoryRequest, \
-    ListCategoryResponse, CategoryOutput
+from src.core.category.application.use_cases.list_category import (
+    ListCategory,
+    ListCategoryRequest,
+    ListCategoryResponse,
+    CategoryOutput,
+)
 from src.core.category.domain.category import Category
 
 
@@ -16,18 +20,16 @@ class TestListCategory:
 
         response: ListCategoryResponse = use_case.execute(request)
 
-        assert response == ListCategoryResponse(
-            data=[]
-        )
+        assert response == ListCategoryResponse(data=[])
 
     def test_when_no_categories_in_repository_returns_list(self):
         category_filme = Category(
-            name='Filme',
-            description='Categoria para filmes',
+            name="Filme",
+            description="Categoria para filmes",
         )
         category_serie = Category(
-            name='Série',
-            description='Categoria para séries',
+            name="Série",
+            description="Categoria para séries",
         )
         repository_mock = create_autospec(CategoryRepository)
         repository_mock.list.return_value = [category_filme, category_serie]
@@ -50,6 +52,6 @@ class TestListCategory:
                     name=category_serie.name,
                     description=category_serie.description,
                     is_active=category_serie.is_active,
-                )
+                ),
             ]
         )

@@ -3,7 +3,10 @@ import uuid
 import pytest
 
 from src.core.category.application.use_cases.exceptions import CategoryNotFound
-from src.core.category.application.use_cases.update_category import UpdateCategory, UpdateCategoryRequest
+from src.core.category.application.use_cases.update_category import (
+    UpdateCategory,
+    UpdateCategoryRequest,
+)
 from src.core.category.domain.category import Category
 from src.core.category.infra.in_memory_category import InMemoryCategoryRepository
 
@@ -11,8 +14,8 @@ from src.core.category.infra.in_memory_category import InMemoryCategoryRepositor
 class TestUpdateCategory:
     def test_update_category_name_and_description(self):
         category = Category(
-            name='Filme',
-            description='Categoria para filmes',
+            name="Filme",
+            description="Categoria para filmes",
             is_active=True,
         )
         repository = InMemoryCategoryRepository()
@@ -20,20 +23,18 @@ class TestUpdateCategory:
 
         use_case = UpdateCategory(repository=repository)
         request = UpdateCategoryRequest(
-            id=category.id,
-            name='Série',
-            description='Categoria para séries'
+            id=category.id, name="Série", description="Categoria para séries"
         )
         use_case.execute(request)
 
         updated_category = repository.get_by_id(category.id)
-        assert updated_category.name == 'Série'
-        assert updated_category.description == 'Categoria para séries'
+        assert updated_category.name == "Série"
+        assert updated_category.description == "Categoria para séries"
 
     def test_can_deactivate_category(self):
         category = Category(
-            name='Série',
-            description='Categoria para séries',
+            name="Série",
+            description="Categoria para séries",
             is_active=True,
         )
         repository = InMemoryCategoryRepository()
@@ -48,13 +49,13 @@ class TestUpdateCategory:
         use_case.execute(request)
 
         assert category.is_active is False
-        assert category.name == 'Série'
-        assert category.description == 'Categoria para séries'
+        assert category.name == "Série"
+        assert category.description == "Categoria para séries"
 
     def test_can_activate_category(self):
         category = Category(
-            name='Série',
-            description='Categoria para séries',
+            name="Série",
+            description="Categoria para séries",
             is_active=False,
         )
         repository = InMemoryCategoryRepository()
@@ -69,13 +70,13 @@ class TestUpdateCategory:
         use_case.execute(request)
 
         assert category.is_active is True
-        assert category.name == 'Série'
-        assert category.description == 'Categoria para séries'
+        assert category.name == "Série"
+        assert category.description == "Categoria para séries"
 
     def test_cannot_update_category_not_found(self):
         category = Category(
-            name='Série',
-            description='Categoria para séries',
+            name="Série",
+            description="Categoria para séries",
             is_active=False,
         )
         repository = InMemoryCategoryRepository()
@@ -87,5 +88,5 @@ class TestUpdateCategory:
             is_active=True,
         )
 
-        with pytest.raises(CategoryNotFound) as exc:
+        with pytest.raises(CategoryNotFound):
             use_case.execute(request)

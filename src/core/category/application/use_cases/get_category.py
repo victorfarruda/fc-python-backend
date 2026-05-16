@@ -19,14 +19,13 @@ class GetCategoryResponse:
 
 
 class GetCategory:
-
     def __init__(self, repository: CategoryRepository):
         self.repository = repository
 
     def execute(self, request: GetCategoryRequest) -> GetCategoryResponse:
         category = self.repository.get_by_id(id=request.id)
         if category is None:
-            raise CategoryNotFound(f'Category with {request.id} not found')
+            raise CategoryNotFound(f"Category with {request.id} not found")
 
         return GetCategoryResponse(
             id=category.id,

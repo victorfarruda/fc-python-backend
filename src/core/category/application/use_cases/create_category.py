@@ -9,7 +9,7 @@ from src.core.category.domain.category import Category
 @dataclass
 class CreateCategoryRequest:
     name: str
-    description: str = ''
+    description: str = ""
     is_active: bool = True
 
 
@@ -19,7 +19,6 @@ class CreateCategoryResponse:
 
 
 class CreateCategory:
-
     def __init__(self, repository: CategoryRepository):
         self.repository = repository
 

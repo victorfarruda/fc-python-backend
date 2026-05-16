@@ -11,13 +11,12 @@ class DeleteCategoryRequest:
 
 
 class DeleteCategory:
-
     def __init__(self, repository: CategoryRepository):
         self.repository = repository
 
     def execute(self, request: DeleteCategoryRequest) -> None:
         category = self.repository.get_by_id(id=request.id)
         if category is None:
-            raise CategoryNotFound(f'Category with {request.id} not found')
+            raise CategoryNotFound(f"Category with {request.id} not found")
 
         self.repository.delete(category.id)

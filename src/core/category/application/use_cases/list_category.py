@@ -23,7 +23,6 @@ class ListCategoryResponse:
 
 
 class ListCategory:
-
     def __init__(self, repository: CategoryRepository):
         self.repository = repository
 
@@ -37,6 +36,7 @@ class ListCategory:
                     name=category.name,
                     description=category.description,
                     is_active=category.is_active,
-                ) for category in categories
+                )
+                for category in categories
             ]
         )

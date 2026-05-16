@@ -10,7 +10,7 @@ class Category(models.Model):
     is_active = models.BooleanField(default=True)
 
     class Meta:
-        db_table = 'category'
+        db_table = "category"
 
     def __str__(self):
         return self.name

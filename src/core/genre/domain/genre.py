@@ -3,10 +3,10 @@ import uuid
 
 
 @dataclass
-class Category:
+class Genre:
     name: str
-    description: str = ""
     is_active: bool = True
+    categories: set[uuid.UUID] = field(default_factory=set)
     id: uuid.UUID = field(default_factory=uuid.uuid4)
 
     def __post_init__(self):
@@ -20,20 +20,19 @@ class Category:
             raise ValueError("name cannot be empty")
 
     def __str__(self):
-        return f"{self.name} - {self.description} ({self.is_active})"
+        return f"{self.name} - ({self.is_active})"
 
     def __repr__(self):
-        return f"{self.name} - {self.description} ({self.is_active})"
+        return f"{self.name} - ({self.is_active})"
 
     def __eq__(self, other):
-        if not isinstance(other, Category):
+        if not isinstance(other, Genre):
             return False
 
         return self.id == other.id
 
-    def update_category(self, name, description):
+    def change_name(self, name):
         self.name = name
-        self.description = description
 
         self.validate()
 
@@ -44,5 +43,15 @@ class Category:
 
     def deactivate(self):
         self.is_active = False
+
+        self.validate()
+
+    def add_category(self, category_id: uuid.UUID):
+        self.categories.add(category_id)
+
+        self.validate()
+
+    def remove_category(self, category_id: uuid.UUID):
+        self.categories.remove(category_id)
 
         self.validate()

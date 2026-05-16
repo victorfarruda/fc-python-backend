@@ -1,5 +1,9 @@
-from src.core.category.application.use_cases.list_category import ListCategory, ListCategoryRequest, \
-    ListCategoryResponse, CategoryOutput
+from src.core.category.application.use_cases.list_category import (
+    ListCategory,
+    ListCategoryRequest,
+    ListCategoryResponse,
+    CategoryOutput,
+)
 from src.core.category.domain.category import Category
 from src.core.category.infra.in_memory_category import InMemoryCategoryRepository
 
@@ -13,20 +17,20 @@ class TestListCategory:
 
         response: ListCategoryResponse = use_case.execute(request)
 
-        assert response == ListCategoryResponse(
-            data=[]
-        )
+        assert response == ListCategoryResponse(data=[])
 
     def test_when_no_categories_in_repository_returns_list(self):
         category_filme = Category(
-            name='Filme',
-            description='Categoria para filmes',
+            name="Filme",
+            description="Categoria para filmes",
         )
         category_serie = Category(
-            name='Série',
-            description='Categoria para séries',
+            name="Série",
+            description="Categoria para séries",
         )
-        repository = InMemoryCategoryRepository(categories=[category_filme, category_serie])
+        repository = InMemoryCategoryRepository(
+            categories=[category_filme, category_serie]
+        )
 
         use_case = ListCategory(repository=repository)
         request = ListCategoryRequest()
@@ -46,6 +50,6 @@ class TestListCategory:
                     name=category_serie.name,
                     description=category_serie.description,
                     is_active=category_serie.is_active,
-                )
+                ),
             ]
         )
