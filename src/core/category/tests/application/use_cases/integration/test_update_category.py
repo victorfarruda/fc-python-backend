@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from src.core.category.application.use_cases.exceptions import CategoryNotFound
+from src.core.category.application.exceptions import CategoryNotFound
 from src.core.category.application.use_cases.update_category import (
     UpdateCategory,
     UpdateCategoryRequest,

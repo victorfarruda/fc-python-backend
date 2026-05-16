@@ -33,7 +33,7 @@ from django_project.category_app.serializers import (
     DeleteCategoryRequestSerializer,
     PartialUpdateCategoryRequestSerializer,
 )
-from src.core.category.application.use_cases.exceptions import (
+from src.core.category.application.exceptions import (
     CategoryNotFound,
 )
 from src.core.category.application.use_cases.get_category import (
