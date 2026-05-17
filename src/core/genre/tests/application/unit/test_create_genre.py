@@ -104,7 +104,9 @@ class TestCreateGenre:
             )
         )
 
-    def test_create_genre_without_categories(self, mock_category_repository_with_categories, mock_genre_repository):
+    def test_create_genre_without_categories(
+        self, mock_category_repository_with_categories, mock_genre_repository
+    ):
         use_case = CreateGenre(
             repository=mock_genre_repository,
             category_repository=mock_category_repository_with_categories,
