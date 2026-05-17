@@ -10,6 +10,7 @@ from src.core.genre.application.exceptions import (
     RelatedCategoriesNotFound,
 )
 from src.core.genre.application.use_cases.create_genre import CreateGenre
+from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import GenreRepository
 
 
@@ -24,18 +25,18 @@ def movie_category() -> Category:
 
 
 @pytest.fixture
-def documentary_movie_category() -> Category:
+def documentary_category() -> Category:
     return Category(name="Documentary", description="Documentary movie category")
 
 
 @pytest.fixture
 def mock_category_repository_with_categories(
-    movie_category: Category, documentary_movie_category: Category
+    movie_category: Category, documentary_category: Category
 ) -> CategoryRepository:
     repository = create_autospec(CategoryRepository)
     repository.list.return_value = [
         movie_category,
-        documentary_movie_category,
+        documentary_category,
     ]
     return repository
 
@@ -74,13 +75,51 @@ class TestCreateGenre:
             category_repository=mock_category_repository_with_categories,
         )
         input = CreateGenre.Input(name="", categories_id={movie_category.id})
-        with pytest.raises(InvalidGenre):
+        with pytest.raises(InvalidGenre, match="name cannot be empty"):
             use_case.execute(input)
 
     def test_when_created_genre_is_valid_and_categories_then_returns_genre_save_genre(
         self,
+        movie_category,
+        documentary_category,
+        mock_category_repository_with_categories,
+        mock_genre_repository,
     ):
-        pass
+        use_case = CreateGenre(
+            repository=mock_genre_repository,
+            category_repository=mock_category_repository_with_categories,
+        )
+        input = CreateGenre.Input(
+            name="Romance", categories_id={movie_category.id, documentary_category.id}
+        )
+        output = use_case.execute(input)
 
-    def test_create_genre_without_categories(self):
-        pass
+        assert isinstance(output.id, uuid.UUID)
+        mock_genre_repository.save.assert_called_once_with(
+            Genre(
+                id=output.id,
+                name="Romance",
+                categories=input.categories_id,
+                is_active=True,
+            )
+        )
+
+    def test_create_genre_without_categories(self, mock_category_repository_with_categories, mock_genre_repository):
+        use_case = CreateGenre(
+            repository=mock_genre_repository,
+            category_repository=mock_category_repository_with_categories,
+        )
+        input = CreateGenre.Input(
+            name="Romance",
+        )
+        output = use_case.execute(input)
+
+        assert isinstance(output.id, uuid.UUID)
+        mock_genre_repository.save.assert_called_once_with(
+            Genre(
+                id=output.id,
+                name="Romance",
+                categories=input.categories_id,
+                is_active=True,
+            )
+        )
