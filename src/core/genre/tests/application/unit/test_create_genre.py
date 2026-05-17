@@ -5,7 +5,10 @@ import pytest
 
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import CategoryRepository
-from src.core.genre.application.exceptions import RelatedCategoriesNotFound
+from src.core.genre.application.exceptions import (
+    InvalidGenre,
+    RelatedCategoriesNotFound,
+)
 from src.core.genre.application.use_cases.create_genre import CreateGenre
 from src.core.genre.domain.genre_repository import GenreRepository
 
@@ -55,13 +58,24 @@ class TestCreateGenre:
         category_id = uuid.uuid4()
         input = CreateGenre.Input(name="Action", categories_id={category_id})
 
-        with pytest.raises(RelatedCategoriesNotFound as exec_info:
+        with pytest.raises(RelatedCategoriesNotFound) as exec_info:
             use_case.execute(input)
 
         assert str(category_id) in str(exec_info.value)
 
-    def test_when_created_genre_is_invalid_then_raises_invalid_genre_exception(self):
-        pass
+    def test_when_created_genre_is_invalid_then_raises_invalid_genre_exception(
+        self,
+        movie_category,
+        mock_category_repository_with_categories,
+        mock_genre_repository,
+    ):
+        use_case = CreateGenre(
+            repository=mock_genre_repository,
+            category_repository=mock_category_repository_with_categories,
+        )
+        input = CreateGenre.Input(name="", categories_id={movie_category.id})
+        with pytest.raises(InvalidGenre):
+            use_case.execute(input)
 
     def test_when_created_genre_is_valid_and_categories_then_returns_genre_save_genre(
         self,
