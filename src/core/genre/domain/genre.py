@@ -55,3 +55,8 @@ class Genre:
         self.categories.remove(category_id)
 
         self.validate()
+
+    def remove_all_categories(self):
+        self.categories.clear()
+
+        self.validate()
