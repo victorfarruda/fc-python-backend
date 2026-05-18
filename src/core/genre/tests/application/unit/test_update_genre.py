@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from core.genre.domain.genre_repository import GenreRepository
+from src.core.genre.domain.genre_repository import GenreRepository
 from src.core.category.domain.category import Category
 from src.core.category.domain.category_repository import CategoryRepository
 from src.core.genre.application.exceptions import (

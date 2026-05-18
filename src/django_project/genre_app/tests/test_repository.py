@@ -29,10 +29,10 @@ class TestSave:
 
         genre_repository = DjangoORMGenreRepository()
         genre = Genre(name="Romance", categories=[category1.id])
-        
+
         assert GenreModel.objects.count() == 0
         genre_repository.save(genre)
-        
+
         assert GenreModel.objects.count() == 1
         genre_model = GenreModel.objects.first()
         assert genre_model.categories.count() == 1

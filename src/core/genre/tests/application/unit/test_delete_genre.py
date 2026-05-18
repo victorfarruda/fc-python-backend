@@ -3,7 +3,7 @@ from unittest.mock import create_autospec
 
 import pytest
 
-from core.genre.domain.genre_repository import GenreRepository
+from src.core.genre.domain.genre_repository import GenreRepository
 from src.core.genre.application.use_cases.delete_genre import (
     DeleteGenre,
 )

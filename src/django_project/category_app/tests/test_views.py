@@ -6,7 +6,7 @@ from rest_framework.status import HTTP_200_OK
 from rest_framework.test import APIClient
 
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
-from core.category.domain.category import Category
+from src.core.category.domain.category import Category
 
 
 @pytest.fixture

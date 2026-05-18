@@ -5,6 +5,7 @@ from src.core.genre.domain.genre import Genre
 from src.core.genre.domain.genre_repository import GenreRepository
 from src.django_project.genre_app.models import GenreModel
 
+
 class DjangoORMGenreRepository(GenreRepository):
     def save(self, genre: Genre):
         with transaction.atomic():
