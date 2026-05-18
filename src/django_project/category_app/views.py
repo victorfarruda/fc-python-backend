@@ -23,7 +23,7 @@ from core.category.application.use_cases.update_category import (
     UpdateCategory,
     UpdateCategoryRequest,
 )
-from django_project.category_app.serializers import (
+from src.django_project.category_app.serializers import (
     ListCategoryResponseSerializer,
     RetrieveCategoryRequestSerializer,
     RetrieveCategoryResponseSerializer,
@@ -41,7 +41,7 @@ from src.core.category.application.use_cases.get_category import (
     GetCategoryRequest,
     GetCategoryResponse,
 )
-from django_project.category_app.repository import DjangoORMCategoryRepository
+from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.core.category.application.use_cases.list_category import (
     ListCategoryRequest,
     ListCategory,
