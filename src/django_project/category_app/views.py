@@ -10,16 +10,16 @@ from rest_framework.status import (
     HTTP_204_NO_CONTENT,
 )
 
-from core.category.application.use_cases.create_category import (
+from src.core.category.application.use_cases.create_category import (
     CreateCategoryRequest,
     CreateCategory,
     CreateCategoryResponse,
 )
-from core.category.application.use_cases.delete_category import (
+from src.core.category.application.use_cases.delete_category import (
     DeleteCategoryRequest,
     DeleteCategory,
 )
-from core.category.application.use_cases.update_category import (
+from src.core.category.application.use_cases.update_category import (
     UpdateCategory,
     UpdateCategoryRequest,
 )
