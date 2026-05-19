@@ -82,6 +82,7 @@ class CategoryViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
 
         input = CreateCategoryRequest(**serializer.validated_data)
+
         use_case = CreateCategory(repository=DjangoORMCategoryRepository())
         output: CreateCategoryResponse = use_case.execute(input)
 

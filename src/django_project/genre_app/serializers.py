@@ -4,8 +4,8 @@ from rest_framework import serializers
 class GenreOutputSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField(max_length=255)
-    categories = serializers.ListField(child=serializers.UUIDField())
     is_active = serializers.BooleanField()
+    categories = serializers.ListField(child=serializers.UUIDField())
 
 
 class ListGenreOutputSerializer(serializers.Serializer):
@@ -23,6 +23,7 @@ class RetrieveGenreOutputSerializer(serializers.Serializer):
 class CreateGenreInputSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     is_active = serializers.BooleanField(default=True)
+    categories = serializers.ListField(child=serializers.UUIDField())
 
 
 class CreateGenreOutputSerializer(serializers.Serializer):
@@ -33,6 +34,7 @@ class UpdateGenreInputSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField(max_length=255, allow_blank=False)
     is_active = serializers.BooleanField()
+    categories = serializers.ListField(child=serializers.UUIDField(), required=False)
 
 
 class DeleteGenreInputSerializer(serializers.Serializer):
@@ -42,5 +44,5 @@ class DeleteGenreInputSerializer(serializers.Serializer):
 class PartialUpdateGenreInputSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField(max_length=255, allow_blank=False, required=False)
-    description = serializers.CharField(required=False)
     is_active = serializers.BooleanField(required=False)
+    categories = serializers.ListField(child=serializers.UUIDField(), required=False)

@@ -1,5 +1,5 @@
 import pytest
-from rest_framework.status import HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 from rest_framework.test import APIClient
 
 from src.core.genre.domain.genre import Genre
@@ -91,3 +91,44 @@ class TestListAPI:
         }
         assert response.status_code == HTTP_200_OK
         assert expected_response == response.data
+
+
+@pytest.mark.django_db
+class TestCreateAPI:
+    def test_create_genre_with_associated_categories(
+        self,
+        category_movie: Category,
+        category_documentary: Category,
+        category_repository: DjangoORMCategoryRepository,
+        genre_repository: DjangoORMGenreRepository,
+    ):
+        category_repository.save(category_movie)
+        category_repository.save(category_documentary)
+
+        url = "/api/genres/"
+        data = {
+            "name": "Drama",
+            "is_active": True,
+            "categories": [str(category_movie.id), str(category_documentary.id)],
+        }
+
+        response = APIClient().post(url, data=data, format="json")
+
+        assert response.status_code == HTTP_201_CREATED
+        assert "id" in response.data
+        assert response.data["name"] == "Drama"
+        assert response.data["is_active"] is True
+        assert set(response.data["categories"]) == {
+            str(category_movie.id),
+            str(category_documentary.id),
+        }
+
+        created_genre_id = response.data["id"]
+        saved_genre = genre_repository.get_by_id(created_genre_id)
+        assert saved_genre is not None
+        assert saved_genre.name == "Drama"
+        assert saved_genre.is_active is True
+        assert set(saved_genre.categories) == {
+            str(category_movie.id),
+            str(category_documentary.id),
+        }
