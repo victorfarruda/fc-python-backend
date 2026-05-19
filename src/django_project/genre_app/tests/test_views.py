@@ -1,5 +1,11 @@
 import pytest
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+from rest_framework.status import (
+    HTTP_200_OK,
+    HTTP_201_CREATED,
+    HTTP_204_NO_CONTENT,
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+)
 from rest_framework.test import APIClient
 
 from src.core.genre.domain.genre import Genre
@@ -130,3 +136,33 @@ class TestCreateAPI:
             category_movie.id,
             category_documentary.id,
         }
+
+
+@pytest.mark.django_db
+class TestDeleteAPI:
+    def test_when_genre_does_not_exist_then_return_404(self):
+        url = "/api/genres/00000000-0000-0000-0000-000000000000/"
+
+        response = APIClient().delete(url)
+
+        assert response.status_code == HTTP_404_NOT_FOUND
+
+    def test_when_pk_is_invlid_then_return_400(self):
+        url = "/api/genres/invalid-uuid/"
+
+        response = APIClient().delete(url)
+
+        assert response.status_code == HTTP_400_BAD_REQUEST
+
+    def test_delete_genre_from_repository(
+        self, genre_romance: Genre, genre_repository: DjangoORMGenreRepository
+    ):
+        genre_repository.save(genre_romance)
+
+        assert genre_repository.get_by_id(genre_romance.id) is not None
+
+        url = f"/api/genres/{genre_romance.id}/"
+        response = APIClient().delete(url)
+
+        assert response.status_code == HTTP_204_NO_CONTENT
+        assert genre_repository.get_by_id(genre_romance.id) is None
