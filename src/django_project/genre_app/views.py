@@ -3,13 +3,16 @@ from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from src.core.genre.application.exceptions import RelatedCategoriesNotFound
-from src.core.genre.application.exceptions import InvalidGenre
+from src.core.genre.application.exceptions import InvalidGenre, RelatedCategoriesNotFound
 from src.core.genre.application.use_cases.create_genre import CreateGenre
 from src.core.genre.application.use_cases.list_genre import ListGenre
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
-from src.django_project.genre_app.serializers import CreateGenreInputSerializer, CreateGenreOutputSerializer, ListGenreOutputSerializer
+from src.django_project.genre_app.serializers import (
+    CreateGenreInputSerializer,
+    CreateGenreOutputSerializer,
+    ListGenreOutputSerializer,
+)
 
 
 class GenreViewSet(viewsets.ViewSet):
@@ -25,9 +28,14 @@ class GenreViewSet(viewsets.ViewSet):
         serializer = CreateGenreInputSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        use_case: CreateGenre = CreateGenre(repository=DjangoORMGenreRepository(), category_repository=DjangoORMCategoryRepository())
+        use_case: CreateGenre = CreateGenre(
+            repository=DjangoORMGenreRepository(),
+            category_repository=DjangoORMCategoryRepository(),
+        )
         try:
-            output: CreateGenre.Output = use_case.execute(input=CreateGenre.Input(**serializer.validated_data))
+            output: CreateGenre.Output = use_case.execute(
+                input=CreateGenre.Input(**serializer.validated_data)
+            )
         except (InvalidGenre, RelatedCategoriesNotFound) as e:
             return Response(status=HTTP_400_BAD_REQUEST, data={"error": str(e)})
 

@@ -25,9 +25,7 @@ def category_documentary() -> Category:
 
 
 @pytest.fixture
-def category_repository(
-    category_movie, category_documentary
-) -> DjangoORMCategoryRepository:
+def category_repository() -> DjangoORMCategoryRepository:
     return DjangoORMCategoryRepository()
 
 
@@ -129,6 +127,6 @@ class TestCreateAPI:
         assert saved_genre.name == "Drama"
         assert saved_genre.is_active is True
         assert set(saved_genre.categories) == {
-            str(category_movie.id),
-            str(category_documentary.id),
+            category_movie.id,
+            category_documentary.id,
         }

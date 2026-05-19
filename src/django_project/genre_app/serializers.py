@@ -20,14 +20,22 @@ class RetrieveGenreOutputSerializer(serializers.Serializer):
     data = GenreOutputSerializer(source="*")
 
 
+class SetField(serializers.ListField):
+    def to_internal_value(self, data):
+        return set(super().to_internal_value(data))
+
+
 class CreateGenreInputSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=255)
     is_active = serializers.BooleanField(default=True)
-    categories = serializers.ListField(child=serializers.UUIDField())
+    categories = SetField(child=serializers.UUIDField())
 
 
 class CreateGenreOutputSerializer(serializers.Serializer):
     id = serializers.UUIDField()
+    name = serializers.CharField(max_length=255)
+    is_active = serializers.BooleanField()
+    categories = serializers.ListField(child=serializers.UUIDField())
 
 
 class UpdateGenreInputSerializer(serializers.Serializer):
