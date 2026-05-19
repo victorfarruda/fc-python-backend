@@ -24,7 +24,7 @@ class DjangoORMGenreRepository(GenreRepository):
                 id=genre_model.id,
                 name=genre_model.name,
                 is_active=genre_model.is_active,
-                categories=set(genre_model.categories.values_list('id', flat=True)),
+                categories=set(genre_model.categories.values_list("id", flat=True)),
             )
             return genre
         except GenreModel.DoesNotExist:
@@ -55,7 +55,7 @@ class DjangoORMGenreRepository(GenreRepository):
                 id=genre_model.id,
                 name=genre_model.name,
                 is_active=genre_model.is_active,
-                categories=set(genre_model.categories.values_list('id', flat=True)),
+                categories=set(genre_model.categories.values_list("id", flat=True)),
             )
             for genre_model in genre_models
         ]

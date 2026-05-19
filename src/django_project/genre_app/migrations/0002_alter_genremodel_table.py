@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('genre_app', '0001_initial'),
+        ("genre_app", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelTable(
-            name='genremodel',
-            table='genre',
+            name="genremodel",
+            table="genre",
         ),
     ]
