@@ -17,6 +17,7 @@ from src.core.genre.application.exceptions import (
 from src.core.genre.application.use_cases.create_genre import CreateGenre
 from src.core.genre.application.use_cases.delete_genre import DeleteGenre
 from src.core.genre.application.use_cases.list_genre import ListGenre
+from src.core.genre.application.use_cases.update_genre import UpdateGenre
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
 from src.django_project.genre_app.serializers import (
@@ -24,6 +25,7 @@ from src.django_project.genre_app.serializers import (
     CreateGenreOutputSerializer,
     DeleteGenreInputSerializer,
     ListGenreOutputSerializer,
+    UpdateGenreInputSerializer,
 )
 
 
@@ -62,6 +64,31 @@ class GenreViewSet(viewsets.ViewSet):
 
         try:
             use_case.execute(input)
+        except GenreNotFound:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+        return Response(status=HTTP_204_NO_CONTENT)
+
+    def update(self, request: Request, pk=None) -> Response:
+        serializer = UpdateGenreInputSerializer(
+            data={
+                **request.data,
+                "id": pk,
+            }
+        )
+        serializer.is_valid(raise_exception=True)
+        input = UpdateGenre.Input(**serializer.validated_data)
+        use_case = UpdateGenre(
+            repository=DjangoORMGenreRepository(),
+            category_repository=DjangoORMCategoryRepository(),
+        )
+        try:
+            use_case.execute(input=input)
+        except RelatedCategoriesNotFound:
+            return Response(
+                status=HTTP_400_BAD_REQUEST,
+                data={"error": "Categories with provided IDs not found"},
+            )
         except GenreNotFound:
             return Response(status=HTTP_404_NOT_FOUND)
 
