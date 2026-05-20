@@ -43,3 +43,11 @@ class CastMember:
             return False
 
         return self.id == other.id
+
+    def change_name(self, name: str):
+        self.name = name
+        self.validate()
+
+    def change_type(self, type: CastMemberType):
+        self.type = type
+        self.validate()
