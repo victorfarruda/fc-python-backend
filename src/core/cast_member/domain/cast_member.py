@@ -4,8 +4,8 @@ from uuid import UUID
 
 
 class CastMemberType(StrEnum):
-    ACTOR = 'ACTOR'
-    DIRECTOR = 'DIRECTOR'
+    ACTOR = "ACTOR"
+    DIRECTOR = "DIRECTOR"
 
 
 @dataclass
@@ -34,7 +34,7 @@ class CastMember:
 
     def __str__(self):
         return f"{self.name} ({self.type})"
-    
+
     def __repr__(self):
         return f"{self.name} ({self.type})"
 

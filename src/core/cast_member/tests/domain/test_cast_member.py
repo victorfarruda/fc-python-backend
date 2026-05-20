@@ -21,7 +21,7 @@ class TestCastMember:
     def test_name_cannot_be_empty(self):
         with pytest.raises(ValueError, match="name cannot be empty"):
             CastMember(id=uuid4(), name="", type=CastMemberType("ACTOR"))
-    
+
     def test_type_is_required(self):
         with pytest.raises(
             TypeError, match="missing 1 required positional argument: 'type'"
@@ -29,7 +29,9 @@ class TestCastMember:
             CastMember(id=uuid4(), name="John Doe")
 
     def test_create_cast_member(self):
-        cast_member = CastMember(id=uuid4(), name="John Doe", type=CastMemberType("ACTOR"))
+        cast_member = CastMember(
+            id=uuid4(), name="John Doe", type=CastMemberType("ACTOR")
+        )
         assert cast_member.name == "John Doe"
         assert cast_member.type == CastMemberType.ACTOR
         assert cast_member.id is not None

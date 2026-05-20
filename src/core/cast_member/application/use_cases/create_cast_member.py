@@ -9,9 +9,7 @@ from src.core.cast_member.domain.cast_member_repository import CastMemberReposit
 
 
 class CreateCastMember:
-    def __init__(
-        self, repository: CastMemberRepository
-    ):
+    def __init__(self, repository: CastMemberRepository):
         self.repository = repository
 
     @dataclass
