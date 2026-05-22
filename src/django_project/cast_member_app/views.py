@@ -52,8 +52,7 @@ class CastMemberViewSet(viewsets.ViewSet):
         serializer.is_valid(raise_exception=True)
 
         input = CreateCastMember.Input(
-            type=CastMemberType(serializer.validated_data["type"].upper()),
-            name=serializer.validated_data["name"],
+            **serializer.validated_data,
         )
 
         use_case = CreateCastMember(repository=DjangoORMCastMemberRepository())
@@ -87,7 +86,7 @@ class CastMemberViewSet(viewsets.ViewSet):
     def destroy(self, request: Request, pk=None) -> Response:
         serializer = DeleteCastMemberInputSerializer(data={"id": pk})
         serializer.is_valid(raise_exception=True)
-        input = DeleteCastMember.Input(**serializer.validated_data)
+        input = DeleteCastMember.DeleteCastMemberInput(**serializer.validated_data)
         use_case = DeleteCastMember(repository=DjangoORMCastMemberRepository())
 
         try:

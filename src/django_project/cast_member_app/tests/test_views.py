@@ -74,7 +74,7 @@ class TestListAPI:
 
 @pytest.mark.django_db
 class TestCreateAPI:
-    def test_create_cast_member(
+    def test_create_cast_member_then_returns_201(
         self,
         cast_member_repository: DjangoORMCastMemberRepository,
     ):
@@ -89,121 +89,124 @@ class TestCreateAPI:
         response = APIClient().post(url, data=data, format="json")
 
         assert response.status_code == HTTP_201_CREATED
-        assert "id" in response.data
-        assert response.data["name"] == "Actor name"
-        assert response.data["type"] == "ACTOR"
-        
-
         created_cast_member_id = response.data["id"]
+        assert created_cast_member_id == response.data["id"]
+        
         saved_cast_member = cast_member_repository.get_by_id(created_cast_member_id)
         assert saved_cast_member is not None
         assert saved_cast_member.name == "Actor name"
         assert saved_cast_member.type.value == "ACTOR"
 
+    def test_create_cast_member_with_invalid_data_then_returns_400(self):
+        url = "/api/cast_members/"
+        data = {
+            "id": "invalid-uuid",
+            "name": "",
+            "type": "INVALID_TYPE",
+        }
 
-# @pytest.mark.django_db
-# class TestUpdateAPI:
-#     def test_when_request_data_is_valid_then_update_cast_member(
-#         self,
-#         category_repository: DjangoORMCategoryRepository,
-#         category_movie: Category,
-#         category_documentary: Category,
-#         cast_member_repository: DjangoORMCastMemberRepository,
-#         cast_member_actor: CastMember,
-#     ) -> None:
-#         category_repository.save(category_movie)
-#         category_repository.save(category_documentary)
-#         cast_member_repository.save(cast_member_actor)
+        response = APIClient().post(url, data=data, format="json")
 
-#         url = f"/api/cast_members/{str(cast_member_actor.id)}/"
-#         data = {
-#             "name": "Drama",
-#             "is_active": True,
-#             "categories_id": [category_documentary.id],
-#         }
-#         response = APIClient().put(url, data=data)
-
-#         assert response.status_code == status.HTTP_204_NO_CONTENT
-#         updated_cast_member = cast_member_repository.get_by_id(cast_member_actor.id)
-#         assert updated_cast_member.name == "Drama"
-#         assert updated_cast_member.is_active is True
-#         assert updated_cast_member.categories == {category_documentary.id}
-
-#     def test_when_request_data_is_invalid_then_return_400(
-#         self,
-#         cast_member_director: CastMember,
-#     ) -> None:
-#         url = f"/api/cast_members/{str(cast_member_director.id)}/"
-#         data = {
-#             "name": "",
-#             "is_active": True,
-#             "categories_id": [],
-#         }
-#         response = APIClient().put(url, data=data)
-
-#         assert response.status_code == status.HTTP_400_BAD_REQUEST
-#         assert response.data == {"name": ["This field may not be blank."]}
-
-#     def test_when_related_categories_do_not_exist_then_return_400(
-#         self,
-#         category_repository: DjangoORMCategoryRepository,
-#         category_movie: Category,
-#         category_documentary: Category,
-#         cast_member_repository: DjangoORMCastMemberRepository,
-#         cast_member_actor: CastMember,
-#     ) -> None:
-#         category_repository.save(category_movie)
-#         category_repository.save(category_documentary)
-#         cast_member_repository.save(cast_member_actor)
-
-#         url = f"/api/cast_members/{str(cast_member_actor.id)}/"
-#         data = {
-#             "name": "Romance",
-#             "is_active": True,
-#             "categories_id": [uuid4()],  # non-existent category
-#         }
-#         response = APIClient().put(url, data=data)
-
-#         assert response.status_code == status.HTTP_400_BAD_REQUEST
-#         assert "Categories with provided IDs not found" in response.data["error"]
-
-#     def test_when_cast_member_does_not_exist_then_return_404(self) -> None:
-#         url = f"/api/cast_members/{str(uuid4())}/"
-#         data = {
-#             "name": "Romance",
-#             "is_active": True,
-#             "categories_id": [],
-#         }
-#         response = APIClient().put(url, data=data)
-
-#         assert response.status_code == status.HTTP_404_NOT_FOUND
+        assert response.status_code == HTTP_400_BAD_REQUEST
+        assert "id" in response.data
+        assert "name" in response.data
+        assert "type" in response.data
 
 
-# @pytest.mark.django_db
-# class TestDeleteAPI:
-#     def test_when_cast_member_does_not_exist_then_return_404(self):
-#         url = "/api/cast_members/00000000-0000-0000-0000-000000000000/"
+@pytest.mark.django_db
+class TestUpdateAPI:
+    def test_when_request_data_is_valid_then_update_cast_member(
+        self,
+        cast_member_repository: DjangoORMCastMemberRepository,
+        cast_member_actor: CastMember,
+    ) -> None:
+        cast_member_repository.save(cast_member_actor)
 
-#         response = APIClient().delete(url)
+        url = f"/api/cast_members/{str(cast_member_actor.id)}/"
+        data = {
+            "name": "Other name",
+            "type": "DIRECTOR",
+        }
+        response = APIClient().put(url, data=data)
 
-#         assert response.status_code == HTTP_404_NOT_FOUND
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+        updated_cast_member = cast_member_repository.get_by_id(cast_member_actor.id)
+        assert updated_cast_member.name == "Other name"
+        assert updated_cast_member.type.value == "DIRECTOR"
 
-#     def test_when_pk_is_invlid_then_return_400(self):
-#         url = "/api/cast_members/invalid-uuid/"
+    def test_when_request_data_is_invalid_then_return_400(
+        self,
+        cast_member_director: CastMember,
+    ) -> None:
+        url = f"/api/cast_members/{str(cast_member_director.id)}/"
+        data = {
+            "name": "",
+            "type": "DIRECTOR",
+        }
+        response = APIClient().put(url, data=data)
 
-#         response = APIClient().delete(url)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        print(response.data)
+        assert response.data == {"name": ["This field may not be blank."]}
 
-#         assert response.status_code == HTTP_400_BAD_REQUEST
+    def test_when_pk_is_invalid_then_return_400(self) -> None:
+        url = "/api/cast_members/invalid-uuid/"
+        data = {
+            "name": "Other name",
+            "type": "DIRECTOR",
+        }
+        response = APIClient().put(url, data=data)
 
-#     def test_delete_cast_member_from_repository(
-#         self, cast_member_actor: CastMember, cast_member_repository: DjangoORMCastMemberRepository
-#     ):
-#         cast_member_repository.save(cast_member_actor)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.json() == {'id': ['Must be a valid UUID.']}
 
-#         assert cast_member_repository.get_by_id(cast_member_actor.id) is not None
+    def test_when_request_data_has_invalid_type_then_return_400(self) -> None:
+        url = f"/api/cast_members/{str(uuid4())}/"
+        data = {
+            "name": "Other name",
+            "type": "INVALID_TYPE",
+        }
+        response = APIClient().put(url, data=data)
 
-#         url = f"/api/cast_members/{cast_member_actor.id}/"
-#         response = APIClient().delete(url)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.json() == {'type': ['"INVALID_TYPE" is not a valid choice.']}
 
-#         assert response.status_code == HTTP_204_NO_CONTENT
-#         assert cast_member_repository.get_by_id(cast_member_actor.id) is None
+    def test_when_cast_member_does_not_exist_then_return_404(self) -> None:
+        url = f"/api/cast_members/{str(uuid4())}/"
+        data = {
+            "name": "Other name",
+            "type": "DIRECTOR",
+        }
+        response = APIClient().put(url, data=data)
+
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@pytest.mark.django_db
+class TestDeleteAPI:
+    def test_when_cast_member_does_not_exist_then_return_404(self):
+        url = "/api/cast_members/00000000-0000-0000-0000-000000000000/"
+
+        response = APIClient().delete(url)
+
+        assert response.status_code == HTTP_404_NOT_FOUND
+
+    def test_when_pk_is_invalid_then_return_400(self):
+        url = "/api/cast_members/invalid-uuid/"
+
+        response = APIClient().delete(url)
+
+        assert response.status_code == HTTP_400_BAD_REQUEST
+
+    def test_delete_cast_member_from_repository(
+        self, cast_member_actor: CastMember, cast_member_repository: DjangoORMCastMemberRepository
+    ):
+        cast_member_repository.save(cast_member_actor)
+
+        assert cast_member_repository.get_by_id(cast_member_actor.id) is not None
+
+        url = f"/api/cast_members/{cast_member_actor.id}/"
+        response = APIClient().delete(url)
+
+        assert response.status_code == HTTP_204_NO_CONTENT
+        assert cast_member_repository.get_by_id(cast_member_actor.id) is None

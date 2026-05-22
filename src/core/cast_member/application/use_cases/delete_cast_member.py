@@ -13,9 +13,9 @@ class DeleteCastMember:
     class DeleteCastMemberInput:
         id: UUID
 
-    def execute(self, request: DeleteCastMemberInput) -> None:
-        cast_member = self.repository.get_by_id(id=request.id)
+    def execute(self, input: DeleteCastMemberInput) -> None:
+        cast_member = self.repository.get_by_id(id=input.id)
         if cast_member is None:
-            raise CastMemberNotFound(f"CastMember with {request.id} not found")
+            raise CastMemberNotFound(f"CastMember with {input.id} not found")
 
         self.repository.delete(cast_member.id)

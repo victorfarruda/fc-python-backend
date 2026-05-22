@@ -1,6 +1,9 @@
+import uuid
+
 from rest_framework import serializers
 
-from src.django_project.cast_member_app.choices import CastMemberType
+from src.core.cast_member.domain.cast_member import CastMemberType
+
 
 
 class CastMemberTypeField(serializers.ChoiceField):
@@ -37,14 +40,13 @@ class RetrieveCastMemberOutputSerializer(serializers.Serializer):
 
 
 class CreateCastMemberInputSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
     name = serializers.CharField(max_length=255)
     type = CastMemberTypeField()
 
 
 class CreateCastMemberOutputSerializer(serializers.Serializer):
     id = serializers.UUIDField()
-    name = serializers.CharField(max_length=255)
-    type = CastMemberTypeField()
 
 
 class UpdateCastMemberInputSerializer(serializers.Serializer):

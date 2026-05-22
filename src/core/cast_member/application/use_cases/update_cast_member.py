@@ -22,19 +22,19 @@ class UpdateCastMember:
         name: str
         type: str
 
-    def execute(self, request: Input) -> None:
-        cast_member: CastMember = self.repository.get_by_id(id=request.id)
+    def execute(self, input: Input) -> None:
+        cast_member: CastMember = self.repository.get_by_id(id=input.id)
         if cast_member is None:
-            raise CastMemberNotFound(f"CastMember with {request.id} not found")
+            raise CastMemberNotFound(f"CastMember with {input.id} not found")
 
         current_name = cast_member.name
         current_type = cast_member.type
 
-        if request.name is not None:
-            current_name = request.name
+        if input.name is not None:
+            current_name = input.name
 
-        if request.type is not None:
-            current_type = CastMemberType(request.type)
+        if input.type is not None:
+            current_type = CastMemberType(input.type)
 
         cast_member.change_name(name=current_name)
         cast_member.change_type(type=current_type)
