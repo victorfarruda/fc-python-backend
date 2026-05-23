@@ -11,7 +11,9 @@ from src.django_project.cast_member_app.models import CastMemberModel
 @pytest.mark.django_db
 class TestSave:
     def test_saves_cast_member_in_database(self):
-        cast_member = CastMember(id=uuid.uuid4(), name="Some person", type=CastMemberType.ACTOR)
+        cast_member = CastMember(
+            id=uuid.uuid4(), name="Some person", type=CastMemberType.ACTOR
+        )
         cast_member_repository = DjangoORMCastMemberRepository()
 
         assert CastMemberModel.objects.count() == 0

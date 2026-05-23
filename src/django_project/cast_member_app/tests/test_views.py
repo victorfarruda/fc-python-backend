@@ -15,7 +15,6 @@ from src.core.cast_member.domain.cast_member import CastMember, CastMemberType
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 
 
-
 @pytest.fixture
 def cast_member_actor() -> CastMember:
     return CastMember(
@@ -27,11 +26,7 @@ def cast_member_actor() -> CastMember:
 
 @pytest.fixture
 def cast_member_director() -> CastMember:
-    return CastMember(
-        id=uuid4(),
-        name="Director name",
-        type=CastMemberType.DIRECTOR
-    )
+    return CastMember(id=uuid4(), name="Director name", type=CastMemberType.DIRECTOR)
 
 
 @pytest.fixture
@@ -78,7 +73,7 @@ class TestCreateAPI:
         self,
         cast_member_repository: DjangoORMCastMemberRepository,
     ):
-      
+
         url = "/api/cast_members/"
         data = {
             "id": str(uuid4()),
@@ -91,7 +86,7 @@ class TestCreateAPI:
         assert response.status_code == HTTP_201_CREATED
         created_cast_member_id = response.data["id"]
         assert created_cast_member_id == response.data["id"]
-        
+
         saved_cast_member = cast_member_repository.get_by_id(created_cast_member_id)
         assert saved_cast_member is not None
         assert saved_cast_member.name == "Actor name"
@@ -158,7 +153,7 @@ class TestUpdateAPI:
         response = APIClient().put(url, data=data)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.json() == {'id': ['Must be a valid UUID.']}
+        assert response.json() == {"id": ["Must be a valid UUID."]}
 
     def test_when_request_data_has_invalid_type_then_return_400(self) -> None:
         url = f"/api/cast_members/{str(uuid4())}/"
@@ -169,7 +164,7 @@ class TestUpdateAPI:
         response = APIClient().put(url, data=data)
 
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-        assert response.json() == {'type': ['"INVALID_TYPE" is not a valid choice.']}
+        assert response.json() == {"type": ['"INVALID_TYPE" is not a valid choice.']}
 
     def test_when_cast_member_does_not_exist_then_return_404(self) -> None:
         url = f"/api/cast_members/{str(uuid4())}/"
@@ -199,7 +194,9 @@ class TestDeleteAPI:
         assert response.status_code == HTTP_400_BAD_REQUEST
 
     def test_delete_cast_member_from_repository(
-        self, cast_member_actor: CastMember, cast_member_repository: DjangoORMCastMemberRepository
+        self,
+        cast_member_actor: CastMember,
+        cast_member_repository: DjangoORMCastMemberRepository,
     ):
         cast_member_repository.save(cast_member_actor)
 

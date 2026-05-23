@@ -5,22 +5,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='CastMemberModel',
+            name="CastMemberModel",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('type', models.CharField(choices=[('ACTOR', 'ACTOR'), ('DIRECTOR', 'DIRECTOR')], max_length=10)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4, primary_key=True, serialize=False
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("ACTOR", "ACTOR"), ("DIRECTOR", "DIRECTOR")],
+                        max_length=10,
+                    ),
+                ),
             ],
             options={
-                'db_table': 'cast_member',
+                "db_table": "cast_member",
             },
         ),
     ]

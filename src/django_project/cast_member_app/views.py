@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -19,7 +17,6 @@ from src.core.cast_member.application.use_cases.delete_cast_member import (
 from src.core.cast_member.application.use_cases.update_cast_member import (
     UpdateCastMember,
 )
-from src.core.cast_member.domain.cast_member import CastMemberType
 from src.django_project.cast_member_app.serializers import (
     CreateCastMemberInputSerializer,
     CreateCastMemberOutputSerializer,

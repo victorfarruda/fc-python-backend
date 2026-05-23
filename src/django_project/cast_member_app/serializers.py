@@ -1,9 +1,6 @@
-import uuid
-
 from rest_framework import serializers
 
 from src.core.cast_member.domain.cast_member import CastMemberType
-
 
 
 class CastMemberTypeField(serializers.ChoiceField):

@@ -1,8 +1,6 @@
-from dataclasses import dataclass, field
-import uuid
+from dataclasses import dataclass
 
 from src.core._shared.entity import Entity
-from src.core._shared.notification import Notification
 
 
 @dataclass
@@ -22,7 +20,7 @@ class Category(Entity):
         if not self.name:
             self.notification.add_error("name cannot be empty")
             # raise ValueError("name cannot be empty")
-        
+
         if len(self.description) > 1024:
             self.notification.add_error("description cannot be longer than 1024")
             # raise ValueError("description cannot be longer than 1024")

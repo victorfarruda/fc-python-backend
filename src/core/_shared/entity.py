@@ -13,8 +13,7 @@ class Entity(ABC):
 
     def __post_init__(self):
         self.validate()
-    
-    
+
     def __eq__(self, other):
         if not isinstance(other, self.__class__):
             return False

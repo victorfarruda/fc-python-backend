@@ -21,8 +21,11 @@ class TestCategory:
             Category(name="Filme", description="a" * 1025)
 
     def test_name_and_description_are_invalid(self):
-        with pytest.raises(ValueError, match="^name cannot be empty,description cannot be longer than 1024$"):
-            category = Category(name="", description="a" * 1025)
+        with pytest.raises(
+            ValueError,
+            match="^name cannot be empty,description cannot be longer than 1024$",
+        ):
+            _ = Category(name="", description="a" * 1025)
 
     def test_category_must_be_create_with_id_as_uuid(self):
         category = Category("Filme")

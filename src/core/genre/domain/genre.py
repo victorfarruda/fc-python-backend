@@ -21,7 +21,7 @@ class Genre(Entity):
         if not self.name:
             self.notification.add_error("name cannot be empty")
             # raise ValueError("name cannot be empty")
-        
+
         if self.notification.has_errors:
             raise ValueError(self.notification.messages)
 
