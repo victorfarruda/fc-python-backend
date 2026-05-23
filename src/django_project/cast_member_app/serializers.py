@@ -24,8 +24,15 @@ class CastMemberOutputSerializer(serializers.Serializer):
     type = CastMemberTypeField()
 
 
+class ListOutputMetaSerializer(serializers.Serializer):
+    current_page = serializers.IntegerField()
+    per_page = serializers.IntegerField()
+    total = serializers.IntegerField()
+
+
 class ListCastMemberOutputSerializer(serializers.Serializer):
     data = CastMemberOutputSerializer(many=True)
+    meta = ListOutputMetaSerializer()
 
 
 class RetrieveCastMemberInputSerializer(serializers.Serializer):

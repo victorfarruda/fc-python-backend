@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
+from src.core._shared.entity import ListOutputMeta
 from src.core.category.domain.category_repository import CategoryRepository
 
 
@@ -20,16 +21,10 @@ class CategoryOutput:
 
 
 @dataclass
-class ListOutputMeta:
-    current_page: int
-    per_page: int
-    total: int
-
-
-@dataclass
 class ListCategoryResponse:
     data: list[CategoryOutput]
     meta: ListOutputMeta = field(default_factory=ListOutputMeta)
+
 
 class ListCategory:
     def __init__(self, repository: CategoryRepository):

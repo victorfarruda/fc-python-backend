@@ -1,9 +1,9 @@
+from src.core._shared.entity import ListOutputMeta
 from src.core.category.application.use_cases.list_category import (
     ListCategory,
     ListCategoryRequest,
     ListCategoryResponse,
     CategoryOutput,
-    ListOutputMeta,
 )
 from src.core.category.domain.category import Category
 from src.core.category.infra.in_memory_category import InMemoryCategoryRepository
@@ -18,7 +18,9 @@ class TestListCategory:
 
         response: ListCategoryResponse = use_case.execute(request)
 
-        assert response == ListCategoryResponse(data=[], meta=ListOutputMeta(current_page=1, per_page=2, total=0))
+        assert response == ListCategoryResponse(
+            data=[], meta=ListOutputMeta(current_page=1, per_page=2, total=0)
+        )
 
     def test_when_categories_in_repository_returns_list(self):
         category_filme = Category(

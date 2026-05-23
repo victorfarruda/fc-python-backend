@@ -61,7 +61,12 @@ class TestListAPI:
                     "name": cast_member_director.name,
                     "type": cast_member_director.type.value,
                 },
-            ]
+            ],
+            "meta": {
+                "total": 2,
+                "current_page": 1,
+                "per_page": 2,
+            },
         }
         assert response.status_code == HTTP_200_OK
         assert expected_response == response.data

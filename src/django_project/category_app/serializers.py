@@ -13,9 +13,11 @@ class ListOutputMetaSerializer(serializers.Serializer):
     per_page = serializers.IntegerField()
     total = serializers.IntegerField()
 
+
 class ListCategoryResponseSerializer(serializers.Serializer):
     data = CategoryResponseSerializer(many=True)
     meta = ListOutputMetaSerializer()
+
 
 class RetrieveCategoryRequestSerializer(serializers.Serializer):
     id = serializers.UUIDField()

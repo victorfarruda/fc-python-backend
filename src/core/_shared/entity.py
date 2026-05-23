@@ -19,3 +19,10 @@ class Entity(ABC):
             return False
 
         return self.id == other.id
+
+
+@dataclass
+class ListOutputMeta:
+    current_page: int
+    per_page: int
+    total: int

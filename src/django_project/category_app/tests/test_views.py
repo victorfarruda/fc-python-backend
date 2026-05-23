@@ -63,7 +63,7 @@ class TestListAPI:
                 "current_page": 1,
                 "per_page": 2,
                 "total": 2,
-            }
+            },
         }
 
         assert HTTP_200_OK == response.status_code
@@ -94,7 +94,7 @@ class TestListAPI:
                 "current_page": 1,
                 "per_page": 1,
                 "total": 2,
-            }
+            },
         }
 
         assert HTTP_200_OK == response.status_code

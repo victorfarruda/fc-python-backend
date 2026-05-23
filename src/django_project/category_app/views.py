@@ -53,7 +53,9 @@ class CategoryViewSet(viewsets.ViewSet):
         order_by = request.query_params.get("order_by", "name")
         current_page = int(request.query_params.get("current_page", 1))
         per_page = int(request.query_params.get("per_page", 2))
-        input = ListCategoryRequest(order_by=order_by, current_page=current_page, per_page=per_page)
+        input = ListCategoryRequest(
+            order_by=order_by, current_page=current_page, per_page=per_page
+        )
         use_case = ListCategory(repository=DjangoORMCategoryRepository())
         output = use_case.execute(input)
 

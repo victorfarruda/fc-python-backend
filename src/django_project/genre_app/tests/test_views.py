@@ -1,4 +1,5 @@
 from uuid import uuid4
+import uuid
 
 import pytest
 from rest_framework import status
@@ -20,6 +21,7 @@ from src.django_project.genre_app.repository import DjangoORMGenreRepository
 @pytest.fixture
 def category_movie() -> Category:
     return Category(
+        id=uuid.UUID("1a4da7ca-86dd-42b9-94f8-0126f412f1c3"),
         name="Movie",
         description="Movie description",
     )
@@ -28,6 +30,7 @@ def category_movie() -> Category:
 @pytest.fixture
 def category_documentary() -> Category:
     return Category(
+        id=uuid.UUID("2b4da7ca-86dd-42b9-94f8-0126f412f1c3"),
         name="Documentary",
         description="Documentary description",
     )
@@ -90,14 +93,55 @@ class TestListAPI:
                     "name": "Romance",
                     "is_active": True,
                     "categories": [
-                        str(category_documentary.id),
                         str(category_movie.id),
+                        str(category_documentary.id),
                     ],
                 },
-            ]
+            ],
+            "meta": {
+                "total": 2,
+                "current_page": 1,
+                "per_page": 2,
+            },
         }
         assert response.status_code == HTTP_200_OK
-        assert expected_response == response.data
+        assert expected_response == response.json()
+
+    def test_list_genres_with_pagination(
+        self,
+        genre_romance: Genre,
+        genre_drama: Genre,
+        category_documentary: Category,
+        category_movie: Category,
+        genre_repository: DjangoORMGenreRepository,
+        category_repository: DjangoORMCategoryRepository,
+    ):
+        genre_repository.save(genre_romance)
+        genre_repository.save(genre_drama)
+        category_repository.save(category_documentary)
+        category_repository.save(category_movie)
+
+        url = "/api/genres/?current_page=1&per_page=1"
+
+        response = APIClient().get(url)
+
+        expected_response = {
+            "data": [
+                {
+                    "id": str(genre_drama.id),
+                    "name": "Drama",
+                    "is_active": True,
+                    "categories": [],
+                }
+            ],
+            "meta": {
+                "total": 2,
+                "current_page": 1,
+                "per_page": 1,
+            },
+        }
+        assert response.status_code == HTTP_200_OK
+        assert expected_response == response.json()
 
 
 @pytest.mark.django_db

@@ -3,6 +3,7 @@ import uuid
 
 import pytest
 
+from src.core._shared.entity import ListOutputMeta
 from src.core.cast_member.application.use_cases.list_cast_member import (
     CastMemberOutput,
     ListCastMember,
@@ -49,7 +50,8 @@ class TestListCastMember:
                     name=actor_cast_member.name,
                     type=actor_cast_member.type,
                 )
-            ]
+            ],
+            meta=ListOutputMeta(total=1, current_page=1, per_page=2),
         )
 
     def test_list_cast_member_empty(self, mock_empty_cast_member_repository):
@@ -57,4 +59,6 @@ class TestListCastMember:
         output = use_case.execute(input=ListCastMember.Input())
 
         assert len(output.data) == 0
-        assert output == ListCastMember.Output(data=[])
+        assert output == ListCastMember.Output(
+            data=[], meta=ListOutputMeta(total=0, current_page=1, per_page=2)
+        )
