@@ -93,7 +93,7 @@ class TestListAPI:
                         str(category_documentary.id),
                         str(category_movie.id),
                     ],
-                }
+                },
             ]
         }
         assert response.status_code == HTTP_200_OK
@@ -116,7 +116,7 @@ class TestCreateAPI:
         data = {
             "name": "Drama",
             "is_active": True,
-            "categories": [str(category_movie.id), str(category_documentary.id)]
+            "categories": [str(category_movie.id), str(category_documentary.id)],
         }
 
         response = APIClient().post(url, data=data, format="json")

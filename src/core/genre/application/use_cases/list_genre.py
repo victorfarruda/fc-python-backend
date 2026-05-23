@@ -26,14 +26,17 @@ class ListGenre:
 
     def execute(self, input: Input) -> Output:
         genres = self.repository.list()
-        mapped_genres = sorted([
-            GenreOutput(
-                id=genre.id,
-                name=genre.name,
-                is_active=genre.is_active,
-                categories=sorted(genre.categories),
-            )
-            for genre in genres
-        ], key=lambda g: getattr(g, input.order_by) if input.order_by else g.name)
+        mapped_genres = sorted(
+            [
+                GenreOutput(
+                    id=genre.id,
+                    name=genre.name,
+                    is_active=genre.is_active,
+                    categories=sorted(genre.categories),
+                )
+                for genre in genres
+            ],
+            key=lambda g: getattr(g, input.order_by) if input.order_by else g.name,
+        )
 
         return self.Output(data=mapped_genres)

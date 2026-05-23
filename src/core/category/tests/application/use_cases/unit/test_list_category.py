@@ -6,6 +6,7 @@ from src.core.category.application.use_cases.list_category import (
     ListCategoryRequest,
     ListCategoryResponse,
     CategoryOutput,
+    ListOutputMeta,
 )
 from src.core.category.domain.category import Category
 
@@ -20,7 +21,7 @@ class TestListCategory:
 
         response: ListCategoryResponse = use_case.execute(request)
 
-        assert response == ListCategoryResponse(data=[])
+        assert response == ListCategoryResponse(data=[], meta=ListOutputMeta(current_page=1, per_page=2, total=0))
 
     def test_when_no_categories_in_repository_returns_list(self):
         category_filme = Category(
@@ -53,5 +54,10 @@ class TestListCategory:
                     description=category_serie.description,
                     is_active=category_serie.is_active,
                 ),
-            ]
+            ],
+            meta=ListOutputMeta(
+                current_page=1,
+                per_page=2,
+                total=2,
+            ),
         )

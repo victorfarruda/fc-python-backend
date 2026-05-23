@@ -58,7 +58,43 @@ class TestListAPI:
                     "description": category_movie.description,
                     "is_active": category_movie.is_active,
                 },
-            ]
+            ],
+            "meta": {
+                "current_page": 1,
+                "per_page": 2,
+                "total": 2,
+            }
+        }
+
+        assert HTTP_200_OK == response.status_code
+        assert expected_data == response.data
+
+    def test_list_categories_with_pagination(
+        self,
+        category_movie: Category,
+        category_documentary: Category,
+        category_repository: DjangoORMCategoryRepository,
+    ) -> None:
+        category_repository.save(category_movie)
+        category_repository.save(category_documentary)
+
+        url = "/api/categories/?current_page=1&per_page=1"
+        response = APIClient().get(url)
+
+        expected_data = {
+            "data": [
+                {
+                    "id": str(category_documentary.id),
+                    "name": category_documentary.name,
+                    "description": category_documentary.description,
+                    "is_active": category_documentary.is_active,
+                },
+            ],
+            "meta": {
+                "current_page": 1,
+                "per_page": 1,
+                "total": 2,
+            }
         }
 
         assert HTTP_200_OK == response.status_code
