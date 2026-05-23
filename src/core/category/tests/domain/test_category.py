@@ -16,6 +16,14 @@ class TestCategory:
         with pytest.raises(ValueError, match="name cannot be longer than 256"):
             Category(name="a" * 256)
 
+    def test_description_must_have_less_than_1024_characters(self):
+        with pytest.raises(ValueError, match="description cannot be longer than 1024"):
+            Category(name="Filme", description="a" * 1025)
+
+    def test_name_and_description_are_invalid(self):
+        with pytest.raises(ValueError, match="^name cannot be empty,description cannot be longer than 1024$"):
+            category = Category(name="", description="a" * 1025)
+
     def test_category_must_be_create_with_id_as_uuid(self):
         category = Category("Filme")
         assert isinstance(category.id, UUID)
@@ -35,7 +43,7 @@ class TestCategory:
         category = Category(
             id=cat_id, name="Filme", description="Filmes em geral", is_active=False
         )
-        assert category.id, cat_id
+        assert category.id == cat_id
         assert category.name == "Filme"
         assert category.description == "Filmes em geral"
         assert category.is_active is False
