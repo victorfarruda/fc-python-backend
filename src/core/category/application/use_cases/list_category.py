@@ -6,7 +6,7 @@ from src.core.category.domain.category_repository import CategoryRepository
 
 @dataclass
 class ListCategoryRequest:
-    pass
+    order_by: str = ""
 
 
 @dataclass
@@ -30,13 +30,16 @@ class ListCategory:
         categories = self.repository.list()
 
         return ListCategoryResponse(
-            data=[
-                CategoryOutput(
-                    id=category.id,
-                    name=category.name,
-                    description=category.description,
-                    is_active=category.is_active,
+            data=sorted(
+                [
+                    CategoryOutput(
+                        id=category.id,
+                        name=category.name,
+                        description=category.description,
+                        is_active=category.is_active,
                 )
                 for category in categories
-            ]
+            ],
+            key=lambda x: getattr(x, request.order_by)
         )
+    )

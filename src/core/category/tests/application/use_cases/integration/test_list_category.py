@@ -19,7 +19,7 @@ class TestListCategory:
 
         assert response == ListCategoryResponse(data=[])
 
-    def test_when_no_categories_in_repository_returns_list(self):
+    def test_when_categories_in_repository_returns_list(self):
         category_filme = Category(
             name="Filme",
             description="Categoria para filmes",
@@ -33,7 +33,7 @@ class TestListCategory:
         )
 
         use_case = ListCategory(repository=repository)
-        request = ListCategoryRequest()
+        request = ListCategoryRequest(order_by="name")
 
         response: ListCategoryResponse = use_case.execute(request)
 

@@ -50,7 +50,8 @@ from src.core.category.application.use_cases.list_category import (
 
 class CategoryViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListCategoryRequest()
+        order_by = request.query_params.get("order_by", "name")
+        input = ListCategoryRequest(order_by=order_by)
         use_case = ListCategory(repository=DjangoORMCategoryRepository())
         output = use_case.execute(input)
 

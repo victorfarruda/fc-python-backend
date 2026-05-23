@@ -35,7 +35,7 @@ class TestListCategory:
         repository_mock.list.return_value = [category_filme, category_serie]
 
         use_case = ListCategory(repository=repository_mock)
-        request = ListCategoryRequest()
+        request = ListCategoryRequest(order_by="name")
 
         response: ListCategoryResponse = use_case.execute(request)
 
