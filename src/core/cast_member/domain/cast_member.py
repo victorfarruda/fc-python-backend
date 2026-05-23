@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import StrEnum
 from uuid import UUID
+from src.core._shared.entity import Entity
 
 
 class CastMemberType(StrEnum):
@@ -9,8 +10,7 @@ class CastMemberType(StrEnum):
 
 
 @dataclass
-class CastMember:
-    id: UUID
+class CastMember(Entity):
     name: str
     type: CastMemberType
 
@@ -19,16 +19,23 @@ class CastMember:
 
     def validate(self):
         if not isinstance(self.id, UUID):
-            raise ValueError("id must be a valid UUID")
+            self.notification.add_error("id must be a valid UUID")
+            # raise ValueError("id must be a valid UUID")
 
         if not isinstance(self.name, str):
-            raise ValueError("name must be a string")
+            self.notification.add_error("name must be a string")
+            # raise ValueError("name must be a string")
 
         if not self.name:
-            raise ValueError("name cannot be empty")
+            self.notification.add_error("name cannot be empty")
+            # raise ValueError("name cannot be empty")
 
         if not isinstance(self.type, CastMemberType):
-            raise ValueError("type must be either 'ACTOR' or 'DIRECTOR'")
+            self.notification.add_error("type must be either 'ACTOR' or 'DIRECTOR'")
+            # raise ValueError("type must be either 'ACTOR' or 'DIRECTOR'")
+
+        if self.notification.has_errors:
+            raise ValueError(self.notification.messages)
 
         self.type = CastMemberType(self.type)
 
@@ -37,12 +44,6 @@ class CastMember:
 
     def __repr__(self):
         return f"{self.name} ({self.type})"
-
-    def __eq__(self, other):
-        if not isinstance(other, CastMember):
-            return False
-
-        return self.id == other.id
 
     def change_name(self, name: str):
         self.name = name
