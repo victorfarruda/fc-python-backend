@@ -17,7 +17,7 @@ class ListCastMember:
 
     @dataclass
     class Input:
-        pass
+        order_by: str = ""
 
     @dataclass
     class Output:
@@ -33,5 +33,7 @@ class ListCastMember:
             )
             for cast_member in cast_members
         ]
+        if input.order_by:
+            mapped_cast_members.sort(key=lambda x: getattr(x, input.order_by))
 
         return self.Output(data=mapped_cast_members)

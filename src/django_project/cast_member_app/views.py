@@ -36,7 +36,8 @@ from src.core.cast_member.application.use_cases.list_cast_member import (
 
 class CastMemberViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        input = ListCastMember.Input()
+        order_by = request.query_params.get("order_by", "name")
+        input = ListCastMember.Input(order_by=order_by)
         use_case = ListCastMember(repository=DjangoORMCastMemberRepository())
         output = use_case.execute(input)
 

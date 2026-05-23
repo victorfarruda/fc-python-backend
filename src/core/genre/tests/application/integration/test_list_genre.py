@@ -29,7 +29,7 @@ class TestListGenre:
                     id=genre.id,
                     name=genre.name,
                     is_active=True,
-                    categories={movie_category.id, documentary_category.id},
+                    categories=sorted({movie_category.id, documentary_category.id}),
                 )
             ]
         )

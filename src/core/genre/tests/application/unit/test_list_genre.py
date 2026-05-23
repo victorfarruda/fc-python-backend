@@ -51,7 +51,6 @@ class TestListGenre:
     def test_list_genre_with_associated_categories(
         self, drama_genre, mock_genre_repository, documentary_category, movie_category
     ):
-
         use_case = ListGenre(repository=mock_genre_repository)
         output = use_case.execute(input=ListGenre.Input())
 
@@ -63,7 +62,7 @@ class TestListGenre:
                     id=drama_genre.id,
                     name=drama_genre.name,
                     is_active=drama_genre.is_active,
-                    categories={movie_category.id, documentary_category.id},
+                    categories=sorted({movie_category.id, documentary_category.id}),
                 )
             ]
         )

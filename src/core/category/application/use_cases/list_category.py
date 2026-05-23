@@ -40,6 +40,6 @@ class ListCategory:
                 )
                 for category in categories
             ],
-            key=lambda x: getattr(x, request.order_by)
+            key=lambda x: getattr(x, request.order_by) if request.order_by else x.name
         )
     )
