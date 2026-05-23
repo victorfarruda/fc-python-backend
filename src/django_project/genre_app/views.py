@@ -27,13 +27,12 @@ from src.django_project.genre_app.serializers import (
     ListGenreOutputSerializer,
     UpdateGenreInputSerializer,
 )
+from src.django_project.shared.views import get_params
 
 
 class GenreViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        order_by = request.query_params.get("order_by", "name")
-        current_page = int(request.query_params.get("current_page", 1))
-        per_page = int(request.query_params.get("per_page", 2))
+        order_by, current_page, per_page = get_params(request)
         use_case = ListGenre(repository=DjangoORMGenreRepository())
         output: ListGenre.Output = use_case.execute(
             input=ListGenre.Input(

@@ -32,13 +32,12 @@ from src.django_project.cast_member_app.repository import DjangoORMCastMemberRep
 from src.core.cast_member.application.use_cases.list_cast_member import (
     ListCastMember,
 )
+from src.django_project.shared.views import get_params
 
 
 class CastMemberViewSet(viewsets.ViewSet):
     def list(self, request: Request) -> Response:
-        order_by = request.query_params.get("order_by", "name")
-        current_page = int(request.query_params.get("current_page", 1))
-        per_page = int(request.query_params.get("per_page", 2))
+        order_by, current_page, per_page = get_params(request)
         input = ListCastMember.Input(
             order_by=order_by, current_page=current_page, per_page=per_page
         )

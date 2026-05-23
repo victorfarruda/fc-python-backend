@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from src.core._shared.application.list_entity import output_entity
 from src.core._shared.entity import ListOutputMeta
 from src.core.genre.domain.genre_repository import GenreRepository
 
@@ -30,27 +31,18 @@ class ListGenre:
 
     def execute(self, input: Input) -> Output:
         genres = self.repository.list()
-        mapped_genres = sorted(
-            [
-                GenreOutput(
-                    id=genre.id,
-                    name=genre.name,
-                    is_active=genre.is_active,
-                    categories=sorted(genre.categories),
-                )
-                for genre in genres
-            ],
-            key=lambda g: getattr(g, input.order_by) if input.order_by else g.name,
-        )
-
-        page_offset = (input.current_page - 1) * input.per_page
-        paginated_genres = mapped_genres[page_offset : page_offset + input.per_page]
-
+        genres_list = [
+            GenreOutput(
+                id=genre.id,
+                name=genre.name,
+                is_active=genre.is_active,
+                categories=sorted(genre.categories),
+            )
+            for genre in genres
+        ]
+        
+        meta, paginated_genres = output_entity(input, genres_list)
         return self.Output(
             data=paginated_genres,
-            meta=ListOutputMeta(
-                current_page=input.current_page,
-                per_page=input.per_page,
-                total=len(mapped_genres),
-            ),
+            meta=meta,
         )

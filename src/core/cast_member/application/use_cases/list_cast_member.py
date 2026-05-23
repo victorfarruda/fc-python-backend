@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from src.core._shared.application.list_entity import output_entity
 from src.core._shared.entity import ListOutputMeta
 from src.core.cast_member.domain.cast_member_repository import CastMemberRepository
 
@@ -29,7 +30,7 @@ class ListCastMember:
 
     def execute(self, input: Input) -> Output:
         cast_members = self.repository.list()
-        mapped_cast_members = [
+        cast_member_list = [
             CastMemberOutput(
                 id=cast_member.id,
                 name=cast_member.name,
@@ -37,19 +38,9 @@ class ListCastMember:
             )
             for cast_member in cast_members
         ]
-        if input.order_by:
-            mapped_cast_members.sort(key=lambda x: getattr(x, input.order_by))
 
-        page_offset = (input.current_page - 1) * input.per_page
-        paginated_cast_members = mapped_cast_members[
-            page_offset : page_offset + input.per_page
-        ]
-
+        meta, paginated_cast_members = output_entity(input, cast_member_list)
         return self.Output(
             data=paginated_cast_members,
-            meta=ListOutputMeta(
-                current_page=input.current_page,
-                per_page=input.per_page,
-                total=len(mapped_cast_members),
-            ),
+            meta=meta,
         )

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from uuid import UUID
 
+from src.core._shared.application.list_entity import output_entity
 from src.core._shared.entity import ListOutputMeta
 from src.core.category.domain.category_repository import CategoryRepository
 
@@ -32,30 +33,18 @@ class ListCategory:
 
     def execute(self, request: ListCategoryRequest) -> ListCategoryResponse:
         categories = self.repository.list()
-
-        sorted_categories = sorted(
-            [
-                CategoryOutput(
-                    id=category.id,
-                    name=category.name,
-                    description=category.description,
-                    is_active=category.is_active,
-                )
-                for category in categories
-            ],
-            key=lambda x: getattr(x, request.order_by) if request.order_by else x.name,
-        )
-
-        page_offset = (request.current_page - 1) * request.per_page
-        categories_page = sorted_categories[
-            page_offset : page_offset + request.per_page
+        categories_list = [
+            CategoryOutput(
+                id=category.id,
+                name=category.name,
+                description=category.description,
+                is_active=category.is_active,
+            )
+            for category in categories
         ]
 
+        meta, paginated_categories = output_entity(request, categories_list)
         return ListCategoryResponse(
-            data=categories_page,
-            meta=ListOutputMeta(
-                current_page=request.current_page,
-                per_page=request.per_page,
-                total=len(sorted_categories),
-            ),
+            data=paginated_categories,
+            meta=meta,
         )

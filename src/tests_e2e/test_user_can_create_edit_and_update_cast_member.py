@@ -12,7 +12,10 @@ class TestCreateAndEditCastMember:
         api_client = APIClient()
 
         list_response = api_client.get("/api/cast_members/")
-        assert list_response.data == {"data": [], "meta": {"current_page": 1, "per_page": 2, "total": 0}}
+        assert list_response.data == {
+            "data": [],
+            "meta": {"current_page": 1, "per_page": 2, "total": 0},
+        }
 
         create_response = api_client.post(
             "/api/cast_members/",
