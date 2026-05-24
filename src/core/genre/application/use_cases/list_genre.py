@@ -40,7 +40,7 @@ class ListGenre:
             )
             for genre in genres
         ]
-        
+
         meta, paginated_genres = output_entity(input, genres_list)
         return self.Output(
             data=paginated_genres,
