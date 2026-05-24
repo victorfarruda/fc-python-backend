@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 
 
-class Category(models.Model):
+class CategoryModel(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     name = models.CharField(max_length=255)
     description = models.TextField()
