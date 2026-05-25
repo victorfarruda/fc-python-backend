@@ -19,10 +19,11 @@ class CreateVideoWithoutMedia:
         description: str
         launch_year: int
         duration: Decimal
+        published: bool
         rating: str
-        categories: set[UUID]
-        genres: set[UUID]
-        cast_members: set[UUID]
+        categories_id: set[UUID]
+        genres_id: set[UUID]
+        cast_members_id: set[UUID]
 
     @dataclass
     class Output:
@@ -59,9 +60,9 @@ class CreateVideoWithoutMedia:
             self.notification.add_error("One or more cast members do not exist")
 
     def execute(self, input: Input) -> Output:
-        self.validate_categories(input.categories)
-        self.validate_genres(input.genres)
-        self.validate_cast_members(input.cast_members)
+        self.validate_categories(input.categories_id)
+        self.validate_genres(input.genres_id)
+        self.validate_cast_members(input.cast_members_id)
 
         if self.notification.has_errors:
             raise RelatedEntitiesNotFound(self.notification.messages)
@@ -72,11 +73,11 @@ class CreateVideoWithoutMedia:
                 description=input.description,
                 launch_year=input.launch_year,
                 duration=input.duration,
-                published=False,
-                rating=Rating(input.rating),
-                categories=input.categories,
-                genres=input.genres,
-                cast_members=input.cast_members,
+                published=input.published,
+                rating=getattr(Rating, input.rating),
+                categories=input.categories_id,
+                genres=input.genres_id,
+                cast_members=input.cast_members_id,
             )
         except ValueError as e:
             raise InvalidVideo(str(e)) from e

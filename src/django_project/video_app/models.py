@@ -17,7 +17,9 @@ class VideoModel(models.Model):
     published = models.BooleanField()
     rating = models.CharField(max_length=10, choices=RATING_CHOICES)
 
-    categories = models.ManyToManyField("category_app.CategoryModel", related_name="videos")
+    categories = models.ManyToManyField(
+        "category_app.CategoryModel", related_name="videos"
+    )
     genres = models.ManyToManyField("genre_app.GenreModel", related_name="videos")
     cast_members = models.ManyToManyField(
         "cast_member_app.CastMemberModel", related_name="videos"

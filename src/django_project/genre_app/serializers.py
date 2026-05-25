@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from src.django_project.shared.serializers import ListOutputMetaSerializer
+from src.django_project.shared.serializers import SetField
 
 
 class GenreOutputSerializer(serializers.Serializer):
@@ -21,11 +22,6 @@ class RetrieveGenreInputSerializer(serializers.Serializer):
 
 class RetrieveGenreOutputSerializer(serializers.Serializer):
     data = GenreOutputSerializer(source="*")
-
-
-class SetField(serializers.ListField):
-    def to_internal_value(self, data):
-        return set(super().to_internal_value(data))
 
 
 class CreateGenreInputSerializer(serializers.Serializer):
