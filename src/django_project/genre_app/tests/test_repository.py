@@ -1,7 +1,7 @@
 import pytest
 
 from src.core.genre.domain.genre import Genre
-from src.django_project.category_app.models import Category
+from src.django_project.category_app.models import CategoryModel
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
 from src.django_project.genre_app.models import GenreModel
@@ -24,7 +24,7 @@ class TestSave:
 
     def test_saves_genre_with_categories(self):
         category_repository = DjangoORMCategoryRepository()
-        category1 = Category(name="Movie", description="Description Movie")
+        category1 = CategoryModel(name="Movie", description="Description Movie")
         category_repository.save(category1)
 
         genre_repository = DjangoORMGenreRepository()

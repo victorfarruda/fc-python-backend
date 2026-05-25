@@ -65,10 +65,10 @@ class TestCreateVideoWithoutMedia:
                 description="A video without media",
                 launch_year=2024,
                 duration=Decimal(120),
-                rating=Rating.AGE_10,
-                categories=set(),
-                genres=set(),
-                cast_members=set(),
+                rating=Rating.AGE_10.name,
+                categories_id=set(),
+                genres_id=set(),
+                cast_members_id=set(),
             )
         )
 
@@ -93,10 +93,10 @@ class TestCreateVideoWithoutMedia:
                     description="",
                     launch_year=2024,
                     duration=Decimal(120),
-                    rating=Rating.AGE_10,
-                    categories=set(),
-                    genres=set(),
-                    cast_members=set(),
+                    rating=Rating.AGE_10.name,
+                    categories_id=set(),
+                    genres_id=set(),
+                    cast_members_id=set(),
                 )
             )
 
@@ -112,10 +112,10 @@ class TestCreateVideoWithoutMedia:
                     description="A video without media",
                     launch_year=2024,
                     duration=Decimal(120),
-                    rating=Rating.AGE_10,
-                    categories={uuid4()},
-                    genres=set(),
-                    cast_members=set(),
+                    rating=Rating.AGE_10.name,
+                    categories_id={uuid4()},
+                    genres_id=set(),
+                    cast_members_id=set(),
                 )
             )
 
@@ -131,10 +131,10 @@ class TestCreateVideoWithoutMedia:
                     description="A video without media",
                     launch_year=2024,
                     duration=Decimal(120),
-                    rating=Rating.AGE_10,
-                    categories=set(),
-                    genres={uuid4()},
-                    cast_members=set(),
+                    rating=Rating.AGE_10.name,
+                    categories_id=set(),
+                    genres_id={uuid4()},
+                    cast_members_id=set(),
                 )
             )
 
@@ -150,10 +150,10 @@ class TestCreateVideoWithoutMedia:
                     description="A video without media",
                     launch_year=2024,
                     duration=Decimal(120),
-                    rating=Rating.AGE_10,
-                    categories=set(),
-                    genres=set(),
-                    cast_members={uuid4()},
+                    rating=Rating.AGE_10.name,
+                    categories_id=set(),
+                    genres_id=set(),
+                    cast_members_id={uuid4()},
                 )
             )
 
@@ -174,9 +174,9 @@ class TestCreateVideoWithoutMedia:
                     description="A video without media",
                     launch_year=2024,
                     duration=Decimal(120),
-                    rating=Rating.AGE_10,
-                    categories={uuid4()},
-                    genres={uuid4()},
-                    cast_members={uuid4()},
+                    rating=Rating.AGE_10.name,
+                    categories_id={uuid4()},
+                    genres_id={uuid4()},
+                    cast_members_id={uuid4()},
                 )
             )

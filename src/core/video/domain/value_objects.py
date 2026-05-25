@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from enum import Enum, auto, unique
-from uuid import UUID
 
 
 @unique

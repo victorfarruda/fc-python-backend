@@ -51,7 +51,7 @@ class VideoModelMapper:
             launch_year=video.launch_year,
             duration=video.duration,
             published=video.published,
-            rating=video.rating,
+            rating=video.rating.name,
         )
         return video_model
 
