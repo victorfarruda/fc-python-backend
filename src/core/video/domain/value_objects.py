@@ -23,14 +23,12 @@ class Rating(Enum):
 
 @dataclass(frozen=True)
 class ImageMedia:
-    check_sum: str
     name: str
     location: str
 
 
 @dataclass(frozen=True)
 class AudioVideoMedia:
-    check_sum: str
     name: str
     raw_location: str
     encoded_location: str
