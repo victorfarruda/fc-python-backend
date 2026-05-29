@@ -2,7 +2,7 @@ from uuid import UUID
 
 from src.core.video.domain.video_repository import VideoRepository
 from src.core.video.domain.video import Video
-from src.django_project.video_app.models import VideoModel
+from src.django_project.video_app.models import VideoModel, AudioVideoMediaModel
 from django.db import transaction
 
 
@@ -11,8 +11,8 @@ class DjangoORMVideoRepository(VideoRepository):
         self.video_model = video_model
 
     def save(self, video: Video):
-        video_model = VideoModelMapper.to_model(video)
         with transaction.atomic():
+            video_model = VideoModelMapper.to_model(video)
             video_model.categories.set(video.categories)
             video_model.genres.set(video.genres)
             video_model.cast_members.set(video.cast_members)
@@ -29,10 +29,32 @@ class DjangoORMVideoRepository(VideoRepository):
         self.video_model.objects.filter(id=id).delete()
 
     def update(self, video: Video) -> None:
-        self.video_model.objects.filter(pk=video.id).update(
-            name=video.name,
-            type=video.type.value,
-        )
+        try:
+            video_model = self.video_model.objects.get(id=video.id)
+        except self.video_model.DoesNotExist:
+            return None
+        else:
+            with transaction.atomic():
+                AudioVideoMediaModel.objects.filter(id=video.id).delete()
+                video_model = VideoModelMapper.to_model(video)
+                video_model.categories.set(video.categories)
+                video_model.genres.set(video.genres)
+                video_model.cast_members.set(video.cast_members)
+
+                video_model.video = AudioVideoMediaModel.objects.create(
+                    name=video.video.name,
+                    raw_location=video.video.raw_location,
+                    encoded_location=video.video.encoded_location,
+                    status=video.video.status,
+                )
+                video_model.title = video.title
+                video_model.description = video.description
+                video_model.launch_year = video.launch_year
+                video_model.duration = video.duration
+                video_model.published = video.published
+                video_model.rating = video.rating.name
+
+                video_model.save()
 
     def list(self) -> list[Video]:
         return [
