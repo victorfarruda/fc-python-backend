@@ -8,12 +8,14 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
 )
 
+from src.core._shared.infra.storage.local_storage import LocalStorage
 from src.core.video.application.exceptions import VideoNotFound
 from src.core.video.application.use_cases.create_video_without_media import (
     CreateVideoWithoutMedia,
 )
 from src.core.video.application.use_cases.delete_video import DeleteVideo
 from src.core.video.application.use_cases.list_video import ListVideo
+from src.core.video.application.use_cases.upload_video import UploadVideo
 from src.django_project.cast_member_app.repository import DjangoORMCastMemberRepository
 from src.django_project.category_app.repository import DjangoORMCategoryRepository
 from src.django_project.genre_app.repository import DjangoORMGenreRepository
@@ -75,3 +77,22 @@ class VideoViewSet(viewsets.ViewSet):
             return Response(status=HTTP_404_NOT_FOUND)
 
         return Response(status=HTTP_204_NO_CONTENT)
+
+    def partial_update(self, request: Request, pk: str) -> Response:
+        file = request.FILES.get("video_file")
+        content = file.read()
+        content_type = file.content_type
+
+        use_case = UploadVideo(
+            repository=DjangoORMVideoRepository(), storage_service=LocalStorage()
+        )
+
+        input_data = UploadVideo.Input(
+            video_id=pk, file_name=file.name, content=content, content_type=content_type
+        )
+        try:
+            use_case.execute(input_data)
+        except VideoNotFound:
+            return Response(status=HTTP_404_NOT_FOUND)
+
+        return Response(status=HTTP_200_OK)
