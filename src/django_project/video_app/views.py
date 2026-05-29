@@ -84,7 +84,7 @@ class VideoViewSet(viewsets.ViewSet):
         content_type = file.content_type
 
         use_case = UploadVideo(
-            repository=DjangoORMVideoRepository(), storage_service=LocalStorage()
+            video_repository=DjangoORMVideoRepository(), storage_service=LocalStorage()
         )
 
         input_data = UploadVideo.Input(

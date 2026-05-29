@@ -2,7 +2,7 @@ from uuid import UUID
 
 from src.core.video.domain.video_repository import VideoRepository
 from src.core.video.domain.video import Video
-from src.django_project.video_app.models import VideoModel, AudioVideoMediaModel
+from src.django_project.video_app.models import VideoModel, VideoMediaModel
 from django.db import transaction
 
 
@@ -35,24 +35,23 @@ class DjangoORMVideoRepository(VideoRepository):
             return None
         else:
             with transaction.atomic():
-                AudioVideoMediaModel.objects.filter(id=video.id).delete()
-                video_model = VideoModelMapper.to_model(video)
                 video_model.categories.set(video.categories)
                 video_model.genres.set(video.genres)
                 video_model.cast_members.set(video.cast_members)
+                video_model.video.delete()
 
-                video_model.video = AudioVideoMediaModel.objects.create(
+                video_model.video = VideoMediaModel.objects.create(
                     name=video.video.name,
                     raw_location=video.video.raw_location,
                     encoded_location=video.video.encoded_location,
-                    status=video.video.status,
+                    status=video.video.status.name,
                 )
                 video_model.title = video.title
                 video_model.description = video.description
                 video_model.launch_year = video.launch_year
                 video_model.duration = video.duration
                 video_model.published = video.published
-                video_model.rating = video.rating.name
+                video_model.rating = video.rating
 
                 video_model.save()
 
@@ -73,7 +72,7 @@ class VideoModelMapper:
             launch_year=video.launch_year,
             duration=video.duration,
             published=video.published,
-            rating=video.rating.name,
+            rating=video.rating,
         )
         return video_model
 
